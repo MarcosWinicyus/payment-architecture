@@ -3,6 +3,7 @@ from src.components.invetory import inventory
 
 st.set_page_config(layout="wide")
 
+
 buff, center, buff2 = st.sidebar.columns([0.3,2,0.3])
 
 page_selected = center.radio(
