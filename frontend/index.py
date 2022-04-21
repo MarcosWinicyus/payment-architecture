@@ -20,6 +20,9 @@ if page_selected == 'Orders':
 
 
 if st.session_state["page"] == "inventory":
+    if not "product_selected" in st.session_state:
+        st.session_state["product_selected"] = {}
+        
     inventory()
 elif st.session_state["page"] == "orders":
     ...
