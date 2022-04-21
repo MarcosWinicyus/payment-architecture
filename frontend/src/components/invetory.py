@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from src.requests.inventory import get_products, post_product, delete_product
+from src.requests.inventory import get_products, post_product, delete_product, patch_product
 
 
 def new_product():
@@ -46,8 +46,12 @@ def product_form():
                 "price": float(price),
                 "quantity": int(quantity)
             }
-            json = post_product(payload)
-            st.write(json)
+            
+            if st.session_state["layout"] == 'new_product':
+                json = post_product(payload)
+                
+            elif st.session_state["layout"] == 'edit_product':
+                json = patch_product(st.session_state["product_selected"]["id"], payload)
 
 def list_products():
     st.title("Inventory List")

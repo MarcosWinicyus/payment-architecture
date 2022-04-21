@@ -46,7 +46,7 @@ while True:
                 obj = result[1][0][1]
                 try:
                     response = requests.post(
-                            f"http://inventory:8000/products/{obj['product_id']}", 
+                            f"http://inventory:8000/products/subtract_stock/{obj['product_id']}", 
                             json= {"quantity" : obj['quantity'] }
                             )
                     

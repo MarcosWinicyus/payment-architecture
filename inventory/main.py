@@ -54,15 +54,37 @@ def create(product: Product):
 def get(pk: str):
     return Product.get(pk)
 
-@app.post('/products/{pk}')
-def delete(data: Dict, pk : str):
+@app.patch('/products/{pk}')
+def edit(data: Product, pk : str):
+    
+
+    product = Product.get(pk)
+    
+    data = data.dict()
+    
+    if data.get('name'):
+        product.name = data['name'] 
+        
+    if data.get('price'):
+        product.price = data['price'] 
+        
+    if data.get('quantity'):
+        product.quantity = data['quantity']
+        
+    product.save()
+    
+    return Product.get(pk)
+
+
+@app.post('/products/subtract_stock/{pk}')
+def subtract_stock(data: Dict, pk : str):
 
     product = Product.get(pk)
     product.quantity = product.quantity - int(data['quantity'])
     product.save()
     
     return Product.get(pk)
-
+    
 @app.delete('/products/{pk}')
 def delete(pk: str):
     return Product.delete(pk)

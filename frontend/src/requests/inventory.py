@@ -19,3 +19,8 @@ def delete_product(id):
     resp = requests.delete(f"http://inventory:8000/products/{id}")
     response = resp.json()
     return response
+    
+def patch_product(id, payload):
+    resp = requests.patch(f"http://inventory:8000/products/{id}", json=payload)
+    response = resp.json()
+    return response
