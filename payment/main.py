@@ -1,3 +1,4 @@
+from typing import Dict, Optional
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.background import BackgroundTasks
@@ -24,16 +25,33 @@ redis = get_redis_connection(
 
 
 class Order(HashModel):
-    product_id: str
-    price: float
-    fee: float
-    total: float
-    quantity: int
-    status: str  # pending, completed, refunded
+    product_id: Optional[str]
+    name: Optional[str]
+    price: Optional[float]
+    fee: Optional[float]
+    total: Optional[float]
+    quantity: Optional[int]
+    status: Optional[str] # pending, completed, refunded, 
 
     class Meta:
         database = redis
 
+@app.get('/orders')
+def all():
+    return [format(pk) for pk in Order.all_pks()]
+
+def format(pk: str):
+    order = Order.get(pk)
+
+    return {
+        'id': order.pk,
+        'product_id': order.product_id,
+        'price': order.price,
+        'fee': order.fee,
+        'quantity': order.quantity,
+        'status' : order.status   
+    }
+    
 @app.get('/orders/{pk}')
 def get(pk: str):
     return Order.get(pk)
@@ -48,6 +66,7 @@ async def create(request: Request, background_tasks: BackgroundTasks):  # id, qu
 
     order = Order(
         product_id=body['id'],
+        product_name=body['name'],
         price=product['price'],
         fee=0.2 * product['price'],
         total=1.2 * product['price'],
@@ -60,6 +79,19 @@ async def create(request: Request, background_tasks: BackgroundTasks):  # id, qu
 
     return order
 
+@app.delete('/orders/{pk}')
+def delete(pk: str):
+    return Order.delete(pk)
+
+
+# @app.post('/orders/set_status/{pk}')
+# def subtract_stock(data: Dict, pk : str):
+
+#     orders = Order.get(pk)
+#     orders.status = int(data['status'])
+#     orders.save()
+    
+#     return Order.get(pk)
 
 def order_completed(order: Order):
 

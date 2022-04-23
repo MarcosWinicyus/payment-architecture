@@ -18,9 +18,11 @@ def expander_expanded(id):
     return True
     
 def product_form():
-
+    
+    col1, col2 = st.columns(2)
+    
     st.title("New Product") if st.session_state["product_selected"] == {
-    } else st.button("🔙 Insertion", on_click=new_product)
+    } else (col1.button("🔙", on_click=new_product), col1.title("Edit Product"))
     
     with st.form(key='product_form'):
     
